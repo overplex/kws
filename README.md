@@ -1,8 +1,21 @@
-# Model & KWS Model Training Guide x86_64
+# Models & KWS Model Training Guide x86_64
 
-### Stream model crnn_state (sheila & marvin)
+### Testing your microphone
 
-`models/crnn_state/tflite_stream_state_external/stream_state_external.tflite`
+```
+cd python_mic
+python3 mic_test.py --list-devices
+python3 mic_test.py --input-device 1 --output-device 3 -c 1 --samplerate 44100
+```
+
+### Testing KWS
+
+```
+cd python_mic
+python3 mic_streaming.py --input-device 1 -k marvin -m ../trained_models/tflite/crnn_state_marvin.tflite
+python3 mic_streaming.py --input-device 1 -k sheila -m ../trained_models/tflite/crnn_state_sheila.tflite
+python3 mic_streaming.py --input-device 1 -k sheila,marvin -m ../trained_models/tflite/crnn_state_sheila_marvin.tflite
+```
 
 # Training guide
 
@@ -61,7 +74,7 @@ pip install artifacts/tensorflow_addons-*.whl
 
 Message about the mismatch of typing-extensions 4.7.1 version - OK.
 
-### Train KWS
+### Training KWS
 
 ```
 cd ~/kws
@@ -69,20 +82,13 @@ chmod +x train_crnn_state.sh
 ./train_crnn_state.sh
 ```
 
-# Testing your microphone
-
-```
-python3 mic_test.py --list-devices
-python3 mic_test.py --input-device 1 --output-device 3 -c 1 --samplerate 44100
-```
-
 # Testing KWS
 
 ```
-python3 mic_streaming.py --input-device 1 -m ../models/crnn_state/tflite_stream_state_external/stream_state_external.tflite
+python3 mic_streaming.py --input-device 1 -k sheila,marvin -m ../models/crnn_state/tflite_stream_state_external/stream_state_external.tflite
 ```
 
-# Config
+# Tested on configuration
 
 - Ubuntu 22.04.4 LTS
 - Linux 5.10.102.1-microsoft-standard-WSL2 #1 SMP Wed Mar 2 00:30:59 UTC 2022 x86_64 x86_64 x86_64 GNU/Linux
@@ -210,7 +216,7 @@ zipp==1.0.0
 
 # Acknowledgements
 
-- Pete Warden for [Speech Commands: A Dataset for Limited-Vocabulary Speech Recognition](https://arxiv.org/abs/1804.03209)
+- [@petewarden](https://github.com/petewarden) for [Speech Commands: A Dataset for Limited-Vocabulary Speech Recognition](https://arxiv.org/abs/1804.03209)
 - [@rybakov](https://github.com/rybakov) for [Streaming Aware neural network models](https://github.com/google-research/google-research/tree/master/kws_streaming)
 - [@StuartIanNaylor](https://github.com/StuartIanNaylor) for [Dataset-builder](https://github.com/StuartIanNaylor/Dataset-builder)
 - [@StuartIanNaylor](https://github.com/StuartIanNaylor) for [google-kws](https://github.com/StuartIanNaylor/g-kws)
