@@ -31,6 +31,9 @@ parser.add_argument(
     '-m', '--model', type=str, required=True,
     help='tflite model')
 parser.add_argument(
+    '-k', '--keywords', type=str, required=True,
+    help='keywords separated by comma')
+parser.add_argument(
     '-i', '--input-device', type=int_or_str,
     help='input device (numeric ID or substring)')
 parser.add_argument(
@@ -93,7 +96,7 @@ if not args.score_threshold:
 else:
     threshold = args.score_threshold
 
-labels = [SILENCE, NOT_KW, 'sheila', 'marvin']
+labels = [SILENCE, NOT_KW] + list(map(lambda x: x.strip(), args.keywords.split(',')))
 gkws = TFLiteKWS(args.model, labels, add_softmax=args.add_softmax, silence_off=not args.silence_on,
     score_strategy=args.score_strategy, score_threshold=threshold, hit_threshold=args.hit_threshold, 
     tailroom_ms=args.tailroom_ms, immediate_trigger=not args.delay_trigger, max_kw_cnt=args.max_kw)
